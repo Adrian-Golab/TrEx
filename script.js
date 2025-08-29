@@ -1,15 +1,37 @@
 // ========== CSV Loading ==========
-function loadCSV(file) {
-  return new Promise((resolve, reject) => {
-    Papa.parse(file, {
-      download: true,
-      header: true,
-      dynamicTyping: false,
-      complete: (res) => resolve(res.data),
-      error: (err) => reject(err),
+async function loadCSV(file) {
+  if (file.endsWith(".gz")) {
+    // If it's gzipped, fetch + decompress first
+    const response = await fetch(file);
+    const arrayBuffer = await response.arrayBuffer();
+
+    // Decompress using pako
+    const compressed = new Uint8Array(arrayBuffer);
+    const decompressed = pako.ungzip(compressed, { to: "string" });
+
+    // Parse CSV text with Papa
+    return new Promise((resolve, reject) => {
+      Papa.parse(decompressed, {
+        header: true,
+        dynamicTyping: false,
+        complete: (res) => resolve(res.data),
+        error: (err) => reject(err),
+      });
     });
-  });
+  } else {
+    // Normal CSV: let Papa handle it directly
+    return new Promise((resolve, reject) => {
+      Papa.parse(file, {
+        download: true,
+        header: true,
+        dynamicTyping: false,
+        complete: (res) => resolve(res.data),
+        error: (err) => reject(err),
+      });
+    });
+  }
 }
+
 
 // ========== Helpers ==========
 function splitMulti(val) {
@@ -323,12 +345,13 @@ function refreshAll() {
 // ========== Init ==========
 async function init() {
   [ct, pdi, cdi, drugs, pubmed] = await Promise.all([
-    loadCSV("CT.csv"),
-    loadCSV("PDI.csv"),
-    loadCSV("CDI.csv"),
-    loadCSV("Drugs.csv"),
-    loadCSV("Pubmed_small.csv")
+    loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/CT.csv"),
+    loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/PDI.csv"),
+    loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/CDI.csv"),
+    loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/Drugs.csv"),
+    loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/Pubmed_small.csv.gz")
   ]);
+
 
   // Chart instances
   chInterventions = createPieChart(document.getElementById("chartInterventions"), "Clinical Trials by Intervention Type");
