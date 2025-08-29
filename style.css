@@ -32,13 +32,6 @@ h3{
     border-radius: 4px;
     width: fit-content;
     position: relative; 
-    #startDate, #endDate {
-    padding: 4px 6px;
-    font-size: 0.95rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-
 }
 
 .controls label {
