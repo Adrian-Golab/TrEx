@@ -1,13 +1,20 @@
 // ========== CSV Loading ==========
 async function loadCSV(file) {
   if (file.endsWith(".gz")) {
-    // If it's gzipped, fetch + decompress first
-    const response = await fetch(file);
+    // Fetch the gzipped file as raw bytes
+    const response = await fetch(file, { headers: { "Accept-Encoding": "identity" } });
+    if (!response.ok) throw new Error(`Failed to fetch ${file}: ${response.status} ${response.statusText}`);
     const arrayBuffer = await response.arrayBuffer();
 
-    // Decompress using pako
+    // Decompress with pako
     const compressed = new Uint8Array(arrayBuffer);
-    const decompressed = pako.ungzip(compressed, { to: "string" });
+    let decompressed;
+    try {
+      decompressed = pako.ungzip(compressed, { to: "string" });
+    } catch (err) {
+      console.error("Failed to decompress gzip:", err);
+      throw err;
+    }
 
     // Parse CSV text with Papa
     return new Promise((resolve, reject) => {
@@ -18,6 +25,7 @@ async function loadCSV(file) {
         error: (err) => reject(err),
       });
     });
+
   } else {
     // Normal CSV: let Papa handle it directly
     return new Promise((resolve, reject) => {
@@ -31,6 +39,7 @@ async function loadCSV(file) {
     });
   }
 }
+
 
 
 // ========== Helpers ==========
