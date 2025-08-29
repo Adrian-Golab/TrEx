@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TrEx - New Medical Treatment Explorer</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" 
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚕️</text></svg>">
+</head>
+<body>
+  <h1>TrEx - New Medical Treatment Explorer</h1>
+  <h3>Enter a disease to get started</h3>
+
+  <!-- Controls -->
+  <div class="controls">
+    <label for="diseaseSearch">Search Disease:</label>
+    <input type="text" id="diseaseSearch" placeholder="Type to search...">
+
+    <label>
+      <input type="checkbox" id="includePubmed"> Include PubMed
+    </label>
+
+    <!-- Date search (UI only for now) -->
+    <label for="startDate">From:</label>
+    <input type="date" id="startDate">
+    <label for="endDate">To:</label>
+    <input type="date" id="endDate">
+  </div>
+
+
+  <!-- Row: Top 10 drugs -->
+  <div class="row">
+    <div class="chart-container">
+      <canvas id="chartCTTopDrugs"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="chartPubmedTopDrugs"></canvas>
+    </div>
+  </div>
+
+  <!-- Row: CT vs PubMed categorized drugs -->
+  <div class="row">
+    <div class="chart-container">
+      <canvas id="chartCT"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="chartPubmed"></canvas>
+    </div>
+  </div>
+
+  <!-- Row: CT phases and PubMed publication types -->
+  <div class="row">
+    <div class="chart-container">
+      <canvas id="chartPhases"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="chartPubTypes"></canvas>
+    </div>
+  </div>
+  
+  <!-- Row: Intervention Types -->
+  <div class="row">
+    <div class="chart-container">
+      <canvas id="chartInterventions"></canvas>
+    </div>
+  </div>
+
+  <!-- Row: Phase 3/4 drugs -->
+  <div class="row">
+    <div class="chart-container large">
+      <div id="phase34List">
+        <h3>Drugs in Phase 3 or 4 Trials</h3>
+        <ul id="phase34Drugs"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recommended Drugs (replaces "Top 10 Most Similar Diseases") -->
+  <div id="recommendationsContainer">
+    <h3>Top 5 Drugs for similar conditions</h3>
+    <table id="recoTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Drug</th>
+          <th>Trial Count</th>
+          <th>Diseases Found In</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <p id="recoNote" class="note"></p>
+  </div>
+
+  <!-- Results Table -->
+  <table id="resultsTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Disease</th>
+        <th>Drug</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script src="script.js"></script>
+</body>
+</html>
