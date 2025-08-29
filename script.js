@@ -39,6 +39,15 @@ function splitMulti(val) {
   return val.split(/[,;/]+/).map(s => s.trim()).filter(Boolean);
 }
 
+function inDateRange(dateStr, start, end) {
+  if (!dateStr) return false;
+  const d = new Date(dateStr);
+  if (isNaN(d)) return false;
+  if (start && d < new Date(start)) return false;
+  if (end && d > new Date(end)) return false;
+  return true;
+}
+
 function diseaseMatch(rowDisease, selected) {
   if (!rowDisease || !selected) return false;
   return rowDisease.trim().toLowerCase() === selected.trim().toLowerCase();
@@ -104,15 +113,13 @@ const chartColors = [
 function refreshAll() {
   const disease = document.getElementById("diseaseSearch").value.trim();
   const includePubmed = document.getElementById("includePubmed").checked;
-  const startDate = document.getElementById("startDate").value;
-  const endDate = document.getElementById("endDate").value;
-  // Currently unused — date filtering will be added later
 
   if (!disease) return;
 
   // --- Intervention Types ---
   const interventionCounts = {};
   ct.filter(r => diseaseMatch(r.Disease, disease)).forEach(row => {
+    
     splitMulti(row["Intervention Types"]).forEach(t => {
       if (t) interventionCounts[t] = (interventionCounts[t] || 0) + 1;
     });
