@@ -39,15 +39,6 @@ function splitMulti(val) {
   return val.split(/[,;/]+/).map(s => s.trim()).filter(Boolean);
 }
 
-function inDateRange(dateStr, start, end) {
-  if (!dateStr) return false;
-  const d = new Date(dateStr);
-  if (isNaN(d)) return false;
-  if (start && d < new Date(start)) return false;
-  if (end && d > new Date(end)) return false;
-  return true;
-}
-
 function diseaseMatch(rowDisease, selected) {
   if (!rowDisease || !selected) return false;
   return rowDisease.trim().toLowerCase() === selected.trim().toLowerCase();
