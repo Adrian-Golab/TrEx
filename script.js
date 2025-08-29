@@ -349,7 +349,7 @@ async function init() {
     loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/PDI.csv"),
     loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/CDI.csv"),
     loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/Drugs.csv"),
-    loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/pubmed_small.csv.gz")
+    loadCSV("https://raw.githubusercontent.com/Adrian-Golab/TrEx/main/Pubmed_small.csv.gz")
   ]);
 
 
